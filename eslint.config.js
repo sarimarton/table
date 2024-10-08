@@ -11,18 +11,39 @@ export default tseslint.config(
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: globals.browser
     },
     plugins: {
       'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      'react-refresh': reactRefresh
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true },
-      ],
+        { allowConstantExport: true }
+      ]
     },
-  },
+    overrides: [
+      {
+        // Only React
+        files: ['**/*.{ts,tsx}'],
+        rules: {
+          '@typescript-eslint/ban-types': [
+            'error',
+            {
+              extendDefaults: true,
+              types: {
+                // Allow type CmpProps = {} for React components. This is safe,
+                // so the "non-nullable" warning is a useless annoyance. See
+                // https://stackoverflow.com/questions/66773897/react-using-typescript-dont-use-as-a-type#comment131463383_66773898
+                // https://github.com/typescript-eslint/typescript-eslint/issues/2063
+                '{}': false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
 )
